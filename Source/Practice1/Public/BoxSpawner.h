@@ -6,24 +6,29 @@
 #include "GameFramework/Actor.h"
 #include "BoxSpawner.generated.h"
 
+class APlatform;
+	
 UCLASS()
 class PRACTICE1_API ABoxSpawner : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+	virtual void BeginPlay() override;
+	
 	// Sets default values for this actor's properties
 	ABoxSpawner();
 
+	void SpawnBox();
+	void SetSpawnTimer();
+	void SetDelayTimer();
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="BoxSpawner|Components")
 	USceneComponent* SceneRoot;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BoxSpawner|Components")
-	UStaticMeshComponent* StaticMesh;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BoxSpawner|Properties")
-	AActor* BoxActor;
+	TSubclassOf<APlatform> Platform;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BoxSpawner|Properties")
 	TArray<FVector> Locations;
@@ -33,10 +38,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BoxSpawner|Properties")
 	float SpawnDelay;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BoxSpawner|Properties")
-	float DestroyDelay;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="BoxSpawner|Properties")
-	float NextStepDelay;
+		
+	FTimerHandle TimerHandle;
 };
