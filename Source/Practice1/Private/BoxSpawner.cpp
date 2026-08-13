@@ -35,6 +35,12 @@ void ABoxSpawner::SpawnBox()
 
 void ABoxSpawner::SetSpawnTimer()
 {	
+    if(nullptr == GetWorld())
+    {
+        UE_LOG(LogTemp, Error, TEXT("GetWorld() is nullptr"));
+        return;
+    }
+
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle
 		, this
 		, &ABoxSpawner::SpawnBox
@@ -59,4 +65,11 @@ void ABoxSpawner::BeginPlay()
 	Super::BeginPlay();
 	
 	SetSpawnTimer();
+}
+
+void ABoxSpawner::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+    
+    Super::EndPlay(EndPlayReason);
 }

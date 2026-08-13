@@ -12,6 +12,9 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class USphereComponent;
+class UMainUI;
+class AKeyProp;
+struct FInputActionInstance;
 
 UCLASS()
 class PRACTICE1_API ATpsPlayer : public ACharacter
@@ -24,7 +27,8 @@ public:
 	void OnMove(const FInputActionValue& Value);
 	void OnLook(const FInputActionValue& Value);
     void OnJump(const FInputActionValue& Value);
-    void OnInteract(const FInputActionValue& Value);
+    void OnInteractOngoing(const FInputActionInstance& Value);
+    void OnInteractCanceled(const FInputActionInstance& Value);
 
     UFUNCTION()
     void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp
@@ -52,20 +56,35 @@ protected:
 	TObjectPtr<UCameraComponent> Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-	UInputMappingContext* DefaultMappingContext;
+    TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-	UInputAction* MoveAction;
+    TObjectPtr<UInputAction> MoveAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-	UInputAction* LookAction;
+    TObjectPtr<UInputAction> LookAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-	UInputAction* JumpAction;
+    TObjectPtr<UInputAction> JumpAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-	UInputAction* InteractAction;
+    TObjectPtr<UInputAction> InteractAction;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Interactions")
-    TObjectPtr<USphereComponent> InteractCollision;
+    TObjectPtr<USphereComponent> InteractionCollision;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Interactions")
+    TObjectPtr<AKeyProp> KeyProp;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Interactions")
+    float InteractionTargetElapsedTime;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|UI")
+    TSubclassOf<UMainUI> MainUiClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Level")
+    TSoftObjectPtr<UWorld> CongratulationLevel;
+
+    TObjectPtr<UMainUI> MainUiInstance;
+    bool IsFinished;
 };

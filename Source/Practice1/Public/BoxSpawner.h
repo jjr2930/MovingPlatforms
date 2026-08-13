@@ -15,7 +15,7 @@ class PRACTICE1_API ABoxSpawner : public AActor
 	
 public:
 	virtual void BeginPlay() override;
-	
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	// Sets default values for this actor's properties
 	ABoxSpawner();
 
