@@ -13,6 +13,9 @@
 #include "MainUI.h"
 #include "KeyProp.h"
 #include "MainUI.h"
+#include "TpsPlayerController.h"
+
+#include <Logging/LogVerbosity.h>
 #include <Kismet/GameplayStatics.h>
 
 // Sets default values
@@ -39,38 +42,6 @@ void ATpsPlayer::BeginPlay()
 {
     Super::BeginPlay();
 
-    //add input system to subsystem
-    APlayerController* PlayerController = Cast<APlayerController>(Controller);
-    if (nullptr == PlayerController)
-    {
-        UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr."));
-        return;
-    }
-
-    UEnhancedInputLocalPlayerSubsystem* SubSystem
-        = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-            PlayerController->GetLocalPlayer());
-
-    if (nullptr == SubSystem)
-    {
-        UE_LOG(LogTemp, Error, TEXT("PlayerController is nullptr."));
-        return;
-    }
-
-    if (nullptr == DefaultMappingContext)
-    {
-        UE_LOG(LogTemp, Error, TEXT("DefaultMappingContext is nullptr."));
-        return;
-    }
-
-    SubSystem->AddMappingContext(DefaultMappingContext, 0);
-
-    if (nullptr == MainUiClass)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Main Ui is nullptr"));
-        return;
-    }
-
     MainUiInstance = CreateWidget<UMainUI>(GetWorld(), MainUiClass);
     if(nullptr == MainUiInstance)
     {
@@ -96,11 +67,20 @@ void ATpsPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         return;
     }
 
-    EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATpsPlayer::OnMove);
-    EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATpsPlayer::OnLook);
-    EnhancedInput->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ATpsPlayer::OnJump);
-    EnhancedInput->BindAction(InteractAction, ETriggerEvent::Ongoing, this, &ATpsPlayer::OnInteractOngoing);
-    EnhancedInput->BindAction(InteractAction, ETriggerEvent::Canceled, this, &ATpsPlayer::OnInteractCanceled);
+    ATpsPlayerController* CastedController
+        = Cast<ATpsPlayerController>(GetController());
+
+    if (!CastedController)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Controller is not ATpsPlayerController"));
+        return;
+    }
+
+    EnhancedInput->BindAction(CastedController->MoveAction, ETriggerEvent::Triggered, this , &ATpsPlayer::OnMove);
+    EnhancedInput->BindAction(CastedController->LookAction, ETriggerEvent::Triggered, this, &ATpsPlayer::OnLook);
+    EnhancedInput->BindAction(CastedController->JumpAction, ETriggerEvent::Triggered, this, &ATpsPlayer::OnJump);
+    EnhancedInput->BindAction(CastedController->InteractAction, ETriggerEvent::Ongoing, this, &ATpsPlayer::OnInteractOngoing);
+    EnhancedInput->BindAction(CastedController->InteractAction, ETriggerEvent::Canceled, this, &ATpsPlayer::OnInteractCanceled);
 }
 
 void ATpsPlayer::OnMove(const FInputActionValue& Value)

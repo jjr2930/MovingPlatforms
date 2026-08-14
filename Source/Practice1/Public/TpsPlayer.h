@@ -55,21 +55,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Components")
 	TObjectPtr<UCameraComponent> Camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-    TObjectPtr<UInputMappingContext> DefaultMappingContext;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-    TObjectPtr<UInputAction> MoveAction;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-    TObjectPtr<UInputAction> LookAction;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-    TObjectPtr<UInputAction> JumpAction;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Inputs")
-    TObjectPtr<UInputAction> InteractAction;
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TpsPlayer|Interactions")
     TObjectPtr<USphereComponent> InteractionCollision;
 
